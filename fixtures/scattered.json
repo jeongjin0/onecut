@@ -1,0 +1,18 @@
+{
+  "as_of": "2026-08-24T09:00:00+09:00",
+  "person": "solo founder",
+  "role": "product + research",
+  "calendar_window": "09:00-18:00 KST",
+  "blocks": [
+    {"start": "09:00", "end": "09:20", "title": "Slack catch-up", "kind": "interrupt", "note": "three pings, none urgent"},
+    {"start": "09:20", "end": "10:00", "title": "Inbox triage", "kind": "admin", "note": "opened 14 threads, finished 0"},
+    {"start": "10:00", "end": "11:00", "title": "Professor meeting", "kind": "meeting", "note": "promised a one-page status"},
+    {"start": "11:00", "end": "12:30", "title": "Paper figure edits", "kind": "deep_work", "note": "started, then context-switched"},
+    {"start": "13:30", "end": "14:00", "title": "Random tab spiral", "kind": "interrupt", "note": "no artifact"}
+  ],
+  "leftover_promises": [
+    "Send the one-page SemDS status to the professor",
+    "Reply to the unpaid intern thread",
+    "Sketch Workcat Steam page copy"
+  ]
+}

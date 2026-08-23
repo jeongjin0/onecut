@@ -1,0 +1,30 @@
+[project]
+name = "onecut"
+version = "0.1.0"
+description = "Professional agent that turns a messy workday log into exactly one next action."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Jeongjin Shin" }]
+dependencies = [
+  "strands-agents>=1.53.0",
+  "fastapi>=0.133",
+  "uvicorn>=0.34",
+  "pydantic>=2.12",
+  "pydantic-settings>=2.4",
+  "python-dotenv>=1.0",
+  "jinja2>=3.1",
+]
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+[project.scripts]
+onecut = "onecut.cli:main"
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools.packages.find]
+include = ["onecut*"]
+[tool.setuptools.package-data]
+onecut = ["web/*.html"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]

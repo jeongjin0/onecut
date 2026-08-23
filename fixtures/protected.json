@@ -1,0 +1,11 @@
+{
+  "as_of": "2026-08-24T09:00:00+09:00",
+  "person": "solo founder",
+  "role": "product + research",
+  "calendar_window": "09:00-18:00 KST",
+  "blocks": [
+    {"start": "09:00", "end": "12:00", "title": "Write the Closeout demo script", "kind": "deep_work", "note": "calendar already blocked"},
+    {"start": "12:00", "end": "13:00", "title": "Lunch", "kind": "break", "note": ""}
+  ],
+  "leftover_promises": []
+}
