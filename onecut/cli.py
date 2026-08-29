@@ -8,7 +8,7 @@ from pathlib import Path
 import uvicorn
 
 from onecut.config import load_settings
-from onecut.engine import run_deterministic
+from onecut.engine import run_cut
 
 
 def main() -> None:
@@ -16,13 +16,14 @@ def main() -> None:
     sub = parser.add_subparsers(dest="cmd", required=True)
     run = sub.add_parser("run", help="Cut a messy day down to one action")
     run.add_argument("--fixture", default="")
+    run.add_argument("--prompt", default="")
     sub.add_parser("serve", help="Serve the local demo UI")
     args = parser.parse_args()
     settings = load_settings()
     if args.cmd == "run":
         if args.fixture:
             settings.onecut_fixture_path = Path(args.fixture)
-        receipt = run_deterministic(settings)
+        receipt = run_cut(settings, prompt=args.prompt or None)
         print(json.dumps(receipt.model_dump(mode="json"), indent=2))
         return
     if args.cmd == "serve":

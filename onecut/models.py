@@ -39,3 +39,7 @@ class RunReceipt(BaseModel):
     cut: Cut | None = None
     status: Literal["ok", "error"] = "ok"
     error: str = ""
+    runner: str = "deterministic"
+    model: str = "policy"
+    tool_trace: list[str] = Field(default_factory=list)
+    agent_text: str = ""

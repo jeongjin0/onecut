@@ -4,61 +4,148 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Onecut</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
-      :root { color-scheme: dark; }
-      body { font-family: ui-sans-serif, system-ui, sans-serif; margin: 0; background: #10110f; color: #f3efe6; }
-      main { max-width: 880px; margin: 0 auto; padding: 32px 20px 72px; }
-      h1 { font-size: 30px; margin: 0 0 8px; }
-      .sub { color: #b9b3a6; margin-bottom: 24px; }
-      .card { background: #1a1b18; border: 1px solid #2e2f2a; border-radius: 18px; padding: 20px; margin: 16px 0; }
-      .row { display: flex; gap: 12px; flex-wrap: wrap; }
-      button, .btn { background: #e7c37a; color: #17170f; border: 0; border-radius: 999px; padding: 10px 16px; font-weight: 700; cursor: pointer; text-decoration: none; }
-      .pill { display: inline-block; padding: 4px 10px; border-radius: 999px; background: #2e2f2a; font-size: 12px; margin-right: 8px; }
-      pre { white-space: pre-wrap; }
-      ul { padding-left: 18px; }
+      :root {
+        --paper: #f4efe4;
+        --ink: #1c1913;
+        --muted: #6b6458;
+        --line: #d7d0c3;
+        --keep: #c24a2a;
+        --chip: #ebe4d6;
+        --shadow: 0 18px 40px -28px rgba(28, 25, 19, 0.45);
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; background: var(--paper); color: var(--ink); }
+      body { font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif; min-height: 100dvh; }
+      main { max-width: 980px; margin: 0 auto; padding: 28px 20px 72px; }
+      .top { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 28px; }
+      h1 { font-size: 42px; line-height: 0.95; letter-spacing: -0.03em; margin: 0 0 8px; max-width: 14ch; text-wrap: balance; }
+      .sub { color: var(--muted); max-width: 46ch; margin: 0; }
+      .meta { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; }
+      .actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 24px; }
+      button, .ghost { font: inherit; border: 0; border-radius: 999px; padding: 10px 14px; cursor: pointer; text-decoration: none; }
+      button { background: var(--ink); color: var(--paper); font-weight: 600; }
+      button.secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+      .ghost { color: var(--muted); border: 1px solid var(--line); }
+      button:focus-visible, .ghost:focus-visible { outline: 2px solid var(--keep); outline-offset: 3px; }
+      .stage { display: grid; grid-template-columns: 1fr 0.9fr; gap: 22px; align-items: start; }
+      .log, .cut { background: #fffdf8; border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+      .log { padding: 8px 0; }
+      .cut { padding: 22px; min-height: 420px; }
+      .item { display: grid; grid-template-columns: 92px minmax(0, 1fr) 64px; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--line); align-items: start; }
+      .item > div:nth-child(2) { min-width: 0; }
+      .mark { text-align: right; padding-top: 2px; }
+      .item:last-child { border-bottom: 0; }
+      .item.kept { background: #f8ebe6; }
+      .item.deferred { opacity: 0.55; }
+      .when { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); }
+      .kind { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+      .mark { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; color: var(--keep); }
+      .cut h2 { font-size: 28px; letter-spacing: -0.03em; margin: 8px 0 10px; text-wrap: balance; max-width: 18ch; }
+      .step { font-size: 18px; margin: 0 0 18px; max-width: 32ch; }
+      .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+      .chip { background: var(--chip); border-radius: 999px; padding: 4px 9px; font-size: 12px; }
+      .deferred-list { margin: 0; padding-left: 18px; color: var(--muted); }
+      .empty { color: var(--muted); }
+      .trace { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); margin-top: 22px; }
+      @media (max-width: 860px) {
+        .stage { grid-template-columns: 1fr; }
+        h1 { font-size: 34px; }
+        .top { display: block; }
+        .item { grid-template-columns: 74px 1fr; }
+        .mark { grid-column: 2; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * { transition: none !important; animation: none !important; }
+      }
     </style>
   </head>
   <body>
     <main>
-      <h1>Onecut</h1>
-      <p class="sub">Professional agent for a messy workday. It reads the log, keeps one next action, and defers the rest. It does not chat and it does not emit a plan.</p>
-      <div class="row">
+      <header class="top">
+        <div>
+          <h1>One next action. The rest can wait.</h1>
+          <p class="sub">Onecut reads a messy founder day, keeps one physical next step, and defers everything else. It does not chat and it does not emit a plan.</p>
+        </div>
+        <div class="meta">
+          <span>{{ runner }}</span>
+          <span>{{ model }}</span>
+          <span>synthetic fixtures</span>
+        </div>
+      </header>
+      <div class="actions">
         <form method="post" action="/run">
           <input type="hidden" name="fixture" value="scattered" />
-          <button type="submit">Cut a scattered day</button>
+          <button type="submit">Cut the scattered day</button>
         </form>
         <form method="post" action="/run">
           <input type="hidden" name="fixture" value="protected" />
-          <button type="submit">Protect deep work</button>
+          <button class="secondary" type="submit">Protect deep work</button>
         </form>
-        <a class="btn" href="/api/latest">Latest JSON</a>
+        <form method="post" action="/run">
+          <input type="hidden" name="fixture" value="plan" />
+          <button class="secondary" type="submit">Ask for a full plan</button>
+        </form>
+        <a class="ghost" href="/api/latest">Latest JSON</a>
       </div>
-      {% if receipt and receipt.cut %}
-      <section class="card">
-        <span class="pill">{{ receipt.status }}</span>
-        <span class="pill">{{ receipt.mode }}</span>
-        <h2>{{ receipt.cut.title }}</h2>
-        <p>{{ receipt.cut.why_this_one }}</p>
-        <h3>First physical step</h3>
-        <p>{{ receipt.cut.first_physical_step }}</p>
-        <h3>Deferred</h3>
-        <ul>
-          {% for item in receipt.cut.deferred %}
-          <li>{{ item }}</li>
-          {% endfor %}
-        </ul>
-        <h3>Refused</h3>
-        <ul>
-          {% for item in receipt.cut.refused %}
-          <li>{{ item }}</li>
-          {% endfor %}
-        </ul>
+      <section class="stage">
+        <article class="log" aria-label="Day log">
+          {% if receipt and receipt.day %}
+            {% for block in receipt.day.blocks %}
+              {% set kept = receipt.cut and (block.title in receipt.cut.title or ('Protect ' + block.title) == receipt.cut.title) %}
+              <div class="item {% if kept %}kept{% elif receipt.cut %}deferred{% endif %}">
+                <div class="when">{{ block.start }}–{{ block.end }}</div>
+                <div>
+                  <div>{{ block.title }}</div>
+                  <div class="kind">{{ block.kind }}{% if block.note %} · {{ block.note }}{% endif %}</div>
+                </div>
+                <div class="mark" aria-hidden="true">{% if kept %}KEEP{% elif receipt.cut %}DEFER{% endif %}</div>
+              </div>
+            {% endfor %}
+            {% for leftover in receipt.day.leftover_promises %}
+              {% set kept = receipt.cut and leftover == receipt.cut.title %}
+              <div class="item {% if kept %}kept{% elif receipt.cut %}deferred{% endif %}">
+                <div class="when">leftover</div>
+                <div>
+                  <div>{{ leftover }}</div>
+                  <div class="kind">promise</div>
+                </div>
+                <div class="mark" aria-hidden="true">{% if kept %}KEEP{% elif receipt.cut %}DEFER{% endif %}</div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="item"><div class="when">09:00</div><div>No cut yet. Run a synthetic founder day.</div></div>
+          {% endif %}
+        </article>
+        <article class="cut" aria-live="polite">
+          {% if receipt and receipt.status == "error" %}
+            <div class="chips"><span class="chip">error</span></div>
+            <h2>The cut failed</h2>
+            <p class="step">{{ receipt.error }}</p>
+          {% elif receipt and receipt.cut %}
+            <div class="chips">
+              <span class="chip">{{ receipt.runner }}</span>
+              <span class="chip">{{ receipt.model }}</span>
+              <span class="chip">{{ receipt.status }}</span>
+            </div>
+            <h2>{{ receipt.cut.title }}</h2>
+            <p class="step">{{ receipt.cut.first_physical_step }}</p>
+            <p>{{ receipt.cut.why_this_one }}</p>
+            <h3>Deferred</h3>
+            <ul class="deferred-list">
+              {% for item in receipt.cut.deferred %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            <p class="trace">{{ receipt.tool_trace | join(" → ") }}</p>
+          {% else %}
+            <p class="empty">The day is still a pile. Cut it once. Onecut will keep a leftover promise or protect the calendar block, then refuse a second action.</p>
+          {% endif %}
+        </article>
       </section>
-      {% else %}
-      <section class="card">
-        <p>No cut yet. Use a synthetic founder day. This is not live Drifty data.</p>
-      </section>
-      {% endif %}
     </main>
   </body>
 </html>

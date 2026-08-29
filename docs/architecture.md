@@ -1,5 +1,15 @@
 # Onecut architecture
 
-HTTP POST /run or CLI -> day-log fixture -> policy.cut_from_day -> exactly one Cut -> receipt JSON + demo UI
+```
+HTTP POST /run or CLI
+  -> Strands Agent (OnecutLocalModel or Bedrock)
+  -> tools: collect_day_log, refuse_full_plan, cut_to_one_action
+  -> deterministic policy.cut_from_day
+  -> one Cut + receipt JSON + demo UI
+```
 
-Strands Agents SDK wraps collect_day_log, cut_to_one_action, refuse_full_plan. Deterministic policy is the source of truth.
+The Strands loop is the required contest surface. The policy is still the source of truth: leftover promises beat new work, a broken day keeps the first promise, and a protected calendar block is kept instead of adding more.
+
+The local model is a scripted Strands `Model` so the demo can run without Bedrock credits. It still emits real tool-use events and the Agent executes the tools. Swap `ONECUT_MODEL=bedrock` when AWS credits land.
+
+Synthetic fixtures only. No live user history.
