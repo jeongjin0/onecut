@@ -9,54 +9,113 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --paper: #f4efe4;
-        --ink: #1c1913;
-        --muted: #6b6458;
-        --line: #d7d0c3;
-        --keep: #c24a2a;
+        --paper: #f3eee4;
+        --ink: #1b1814;
+        --muted: #6f685c;
+        --line: #d8d1c4;
+        --keep: #b42318;
+        --keep-bg: #f6e4d8;
+        --surface: #fffaf2;
         --chip: #ebe4d6;
-        --shadow: 0 18px 40px -28px rgba(28, 25, 19, 0.45);
       }
       * { box-sizing: border-box; }
       html, body { margin: 0; background: var(--paper); color: var(--ink); }
-      body { font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif; min-height: 100dvh; }
-      main { max-width: 980px; margin: 0 auto; padding: 28px 20px 72px; }
-      .top { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 28px; }
-      h1 { font-size: 42px; line-height: 0.95; letter-spacing: -0.03em; margin: 0 0 8px; max-width: 14ch; text-wrap: balance; }
-      .sub { color: var(--muted); max-width: 46ch; margin: 0; }
-      .meta { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; }
-      .actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 24px; }
-      button, .ghost { font: inherit; border: 0; border-radius: 999px; padding: 10px 14px; cursor: pointer; text-decoration: none; }
+      body {
+        font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+        min-height: 100dvh;
+      }
+      main { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 80px; }
+      .mast {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) auto;
+        gap: 20px;
+        align-items: end;
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 2.35rem;
+        line-height: 0.96;
+        letter-spacing: -0.03em;
+        margin: 0 0 8px;
+        max-width: 16ch;
+        text-wrap: balance;
+      }
+      .sub { color: var(--muted); max-width: 44ch; margin: 0; }
+      .meta {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 12px;
+        color: var(--muted);
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 22px; }
+      button, .ghost {
+        font: inherit;
+        border: 0;
+        border-radius: 999px;
+        padding: 10px 14px;
+        min-height: 44px;
+        cursor: pointer;
+        text-decoration: none;
+      }
       button { background: var(--ink); color: var(--paper); font-weight: 600; }
       button.secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
-      .ghost { color: var(--muted); border: 1px solid var(--line); }
+      .ghost { color: var(--muted); border: 1px solid var(--line); display: inline-flex; align-items: center; }
+      button:hover { filter: brightness(1.08); }
       button:focus-visible, .ghost:focus-visible { outline: 2px solid var(--keep); outline-offset: 3px; }
-      .stage { display: grid; grid-template-columns: 1fr 0.9fr; gap: 22px; align-items: start; }
-      .log, .cut { background: #fffdf8; border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
-      .log { padding: 8px 0; }
-      .cut { padding: 22px; min-height: 420px; }
-      .item { display: grid; grid-template-columns: 92px minmax(0, 1fr) 64px; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--line); align-items: start; }
-      .item > div:nth-child(2) { min-width: 0; }
-      .mark { text-align: right; padding-top: 2px; }
-      .item:last-child { border-bottom: 0; }
-      .item.kept { background: #f8ebe6; }
-      .item.deferred { opacity: 0.55; }
-      .when { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); }
-      .kind { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
-      .mark { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; color: var(--keep); }
-      .cut h2 { font-size: 28px; letter-spacing: -0.03em; margin: 8px 0 10px; text-wrap: balance; max-width: 18ch; }
-      .step { font-size: 18px; margin: 0 0 18px; max-width: 32ch; }
-      .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+      .stage { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr); gap: 18px; align-items: start; }
+      .stage { align-items: stretch; }
+      .log, .cut { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+      .cut { min-height: 100%; }
+      .panel-label {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 12px 16px 0;
+      }
+      .item {
+        display: grid;
+        grid-template-columns: 76px minmax(0, 1fr);
+        gap: 12px;
+        padding: 11px 16px;
+        border-top: 1px solid var(--line);
+      }
+      .item:first-of-type { border-top: 0; }
+      .item.kept { background: var(--keep-bg); }
+      .item.deferred .title, .item.deferred .kind, .item.deferred .when { color: #90897c; }
+      .when { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); padding-top: 3px; }
+      .title { font-weight: 500; }
+      .kind { font-size: 12px; color: var(--muted); margin-top: 2px; }
+      .kept-flag {
+        display: inline-block;
+        margin-left: 8px;
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        color: var(--keep);
+        vertical-align: 1px;
+      }
+      .cut { padding: 0 16px 18px; }
+      .cut h2 { font-size: 1.7rem; letter-spacing: -0.03em; margin: 8px 0 8px; text-wrap: balance; max-width: 18ch; }
+      .step { font-size: 1.05rem; margin: 0 0 14px; max-width: 34ch; }
+      .why { color: var(--muted); margin: 0 0 16px; max-width: 42ch; }
+      .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 4px; }
       .chip { background: var(--chip); border-radius: 999px; padding: 4px 9px; font-size: 12px; }
       .deferred-list { margin: 0; padding-left: 18px; color: var(--muted); }
-      .empty { color: var(--muted); }
-      .trace { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); margin-top: 22px; }
+      .empty { color: var(--muted); padding: 8px 0 12px; }
+      .trace { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+      .trace ol { margin: 8px 0 0; padding-left: 18px; }
+      .trace li { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; color: var(--muted); margin: 4px 0; }
+      .ask { font-size: 12px; color: var(--muted); margin: 0; }
       @media (max-width: 860px) {
-        .stage { grid-template-columns: 1fr; }
-        h1 { font-size: 34px; }
-        .top { display: block; }
-        .item { grid-template-columns: 74px 1fr; }
-        .mark { grid-column: 2; }
+        .mast, .stage { grid-template-columns: 1fr; }
+        h1 { font-size: 2rem; }
+        .meta { justify-content: flex-start; }
+        .item { grid-template-columns: 64px minmax(0, 1fr); }
       }
       @media (prefers-reduced-motion: reduce) {
         * { transition: none !important; animation: none !important; }
@@ -65,7 +124,7 @@
   </head>
   <body>
     <main>
-      <header class="top">
+      <header class="mast">
         <div>
           <h1>One next action. The rest can wait.</h1>
           <p class="sub">Onecut reads a messy founder day, keeps one physical next step, and defers everything else. It does not chat and it does not emit a plan.</p>
@@ -93,34 +152,34 @@
       </div>
       <section class="stage">
         <article class="log" aria-label="Day log">
+          <div class="panel-label">The day</div>
           {% if receipt and receipt.day %}
             {% for block in receipt.day.blocks %}
-              {% set kept = receipt.cut and (block.title in receipt.cut.title or ('Protect ' + block.title) == receipt.cut.title) %}
+              {% set kept = receipt.cut and block.title in receipt.cut.kept_titles %}
               <div class="item {% if kept %}kept{% elif receipt.cut %}deferred{% endif %}">
-                <div class="when">{{ block.start }}–{{ block.end }}</div>
+                <div class="when">{{ block.start }}</div>
                 <div>
-                  <div>{{ block.title }}</div>
-                  <div class="kind">{{ block.kind }}{% if block.note %} · {{ block.note }}{% endif %}</div>
+                  <div class="title">{{ block.title }}{% if kept %}<span class="kept-flag">keep</span>{% endif %}</div>
+                  <div class="kind">{{ block.start }}–{{ block.end }} · {{ block.kind }}{% if block.note %} · {{ block.note }}{% endif %}</div>
                 </div>
-                <div class="mark" aria-hidden="true">{% if kept %}KEEP{% elif receipt.cut %}DEFER{% endif %}</div>
               </div>
             {% endfor %}
             {% for leftover in receipt.day.leftover_promises %}
-              {% set kept = receipt.cut and leftover == receipt.cut.title %}
+              {% set kept = receipt.cut and leftover in receipt.cut.kept_titles %}
               <div class="item {% if kept %}kept{% elif receipt.cut %}deferred{% endif %}">
-                <div class="when">leftover</div>
+                <div class="when">open</div>
                 <div>
-                  <div>{{ leftover }}</div>
-                  <div class="kind">promise</div>
+                  <div class="title">{{ leftover }}{% if kept %}<span class="kept-flag">keep</span>{% endif %}</div>
+                  <div class="kind">leftover promise</div>
                 </div>
-                <div class="mark" aria-hidden="true">{% if kept %}KEEP{% elif receipt.cut %}DEFER{% endif %}</div>
               </div>
             {% endfor %}
           {% else %}
-            <div class="item"><div class="when">09:00</div><div>No cut yet. Run a synthetic founder day.</div></div>
+            <div class="item"><div class="when">09:00</div><div class="title">No cut yet. Run a synthetic founder day.</div></div>
           {% endif %}
         </article>
         <article class="cut" aria-live="polite">
+          <div class="panel-label">The cut</div>
           {% if receipt and receipt.status == "error" %}
             <div class="chips"><span class="chip">error</span></div>
             <h2>The cut failed</h2>
@@ -128,19 +187,25 @@
           {% elif receipt and receipt.cut %}
             <div class="chips">
               <span class="chip">{{ receipt.runner }}</span>
-              <span class="chip">{{ receipt.model }}</span>
-              <span class="chip">{{ receipt.status }}</span>
+              <span class="chip">{{ receipt.cut.rule }}</span>
             </div>
             <h2>{{ receipt.cut.title }}</h2>
             <p class="step">{{ receipt.cut.first_physical_step }}</p>
-            <p>{{ receipt.cut.why_this_one }}</p>
+            <p class="why">{{ receipt.cut.why_this_one }}</p>
             <h3>Deferred</h3>
             <ul class="deferred-list">
               {% for item in receipt.cut.deferred %}
               <li>{{ item }}</li>
               {% endfor %}
             </ul>
-            <p class="trace">{{ receipt.tool_trace | join(" → ") }}</p>
+            <div class="trace">
+              <p class="ask">{% if receipt.prompt %}Asked: {{ receipt.prompt }}{% else %}Asked: cut to one action.{% endif %}</p>
+              <ol>
+                {% for step in receipt.tool_trace %}
+                <li>{{ step }}</li>
+                {% endfor %}
+              </ol>
+            </div>
           {% else %}
             <p class="empty">The day is still a pile. Cut it once. Onecut will keep a leftover promise or protect the calendar block, then refuse a second action.</p>
           {% endif %}

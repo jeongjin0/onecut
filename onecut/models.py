@@ -28,6 +28,8 @@ class Cut(BaseModel):
     first_physical_step: str
     deferred: list[str] = Field(default_factory=list)
     refused: list[str] = Field(default_factory=list)
+    kept_titles: list[str] = Field(default_factory=list)
+    rule: str = ""
 
 
 class RunReceipt(BaseModel):
@@ -43,3 +45,4 @@ class RunReceipt(BaseModel):
     model: str = "policy"
     tool_trace: list[str] = Field(default_factory=list)
     agent_text: str = ""
+    prompt: str = ""

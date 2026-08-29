@@ -32,6 +32,8 @@ def cut_from_day(day: DayLog) -> Cut:
             first_physical_step=f"Open a 25-minute timer and do only: {chosen}",
             deferred=deferred,
             refused=[REFUSED_CHAT, REFUSED_PLAN, REFUSED_MULTITASK],
+            kept_titles=[chosen],
+            rule="broken-day-keeps-first-promise",
         )
     if leftovers:
         chosen = leftovers[0]
@@ -41,15 +43,19 @@ def cut_from_day(day: DayLog) -> Cut:
             first_physical_step=f"Write the first sentence or first failing test for: {chosen}",
             deferred=leftovers[1:] or ["No second action."],
             refused=[REFUSED_CHAT, REFUSED_PLAN, REFUSED_MULTITASK],
+            kept_titles=[chosen],
+            rule="finish-open-promise",
         )
     if _open_deep_work(day):
         deep = next(block for block in day.blocks if block.kind == "deep_work")
         return Cut(
-            title=f"Protect {deep.title}",
+            title=deep.title,
             why_this_one="The calendar already named deep work. The cut is to keep it, not add more.",
             first_physical_step=f"Silence notifications until {deep.end} and stay on {deep.title}.",
             deferred=[block.title for block in day.blocks if block.kind != "deep_work"],
             refused=[REFUSED_CHAT, REFUSED_PLAN, REFUSED_MULTITASK],
+            kept_titles=[deep.title],
+            rule="protect-named-deep-work",
         )
     return Cut(
         title="Stop adding work",
@@ -57,4 +63,6 @@ def cut_from_day(day: DayLog) -> Cut:
         first_physical_step="Close the inbox. Do not start a new thread.",
         deferred=[block.title for block in day.blocks],
         refused=[REFUSED_CHAT, REFUSED_PLAN, REFUSED_MULTITASK],
+        kept_titles=[],
+        rule="stop-adding-work",
     )

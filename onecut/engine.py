@@ -68,6 +68,7 @@ def run_agent(settings: Settings, prompt: str | None = None) -> RunReceipt:
             model=result["model"],
             tool_trace=result["tool_trace"],
             agent_text=result["agent_text"],
+            prompt=prompt or "",
         )
     except Exception as exc:  # pragma: no cover - surfaced in the demo receipt
         receipt = RunReceipt(
@@ -81,6 +82,7 @@ def run_agent(settings: Settings, prompt: str | None = None) -> RunReceipt:
             error=str(exc),
             runner="strands",
             model=settings.onecut_model,
+            prompt=prompt or "",
         )
     finally:
         reset_settings(token)

@@ -21,13 +21,15 @@ def test_scattered_day_keeps_first_promise(tmp_path):
     receipt = run_deterministic(settings(tmp_path, "scattered.json"))
     assert "one-page SemDS status" in receipt.cut.title
     assert any("never assigns two" in x.lower() or "exactly one next action" in x.lower() for x in receipt.cut.refused)
+    assert receipt.cut.kept_titles == [receipt.cut.title]
 
 
 def test_protected_day_keeps_calendar_block(tmp_path):
     cut = cut_from_day(load_day(ROOT / "fixtures" / "protected.json"))
-    assert "Protect" in cut.title
+    assert cut.title == "Write the Closeout demo script"
     receipt = run_deterministic(settings(tmp_path, "protected.json"))
-    assert "Protect" in receipt.cut.title
+    assert receipt.cut.title == "Write the Closeout demo script"
+    assert "Write the Closeout demo script" in receipt.cut.kept_titles
 
 
 def test_strands_loop_collects_then_cuts(tmp_path):
